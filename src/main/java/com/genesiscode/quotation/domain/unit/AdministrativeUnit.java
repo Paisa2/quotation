@@ -3,9 +3,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.*;
 
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter @Setter @NoArgsConstructor @ToString @EqualsAndHashCode
 @Entity @Table(name = "units_administratives")
-public class UnitAdministrative {
+public class AdministrativeUnit {
 
     @Id
     @SequenceGenerator(name = "unit_admin_sequence", sequenceName = "unit_admin_sequence", allocationSize = 1)
@@ -18,7 +18,7 @@ public class UnitAdministrative {
     @OneToMany(mappedBy = "unit")
     private List<DependencyAdministrative> dependency;
 
-    public UnitAdministrative(String name) {
+    public AdministrativeUnit(String name) {
         this.name = name;
     }
 }
