@@ -1,5 +1,6 @@
 package com.genesiscode.quotation.controller;
 import com.genesiscode.quotation.domain.unit.AdministrativeUnit;
+import com.genesiscode.quotation.domain.user.Responsible;
 import com.genesiscode.quotation.service.AdministratorService;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -11,18 +12,26 @@ public class AdministratorController {
 
     private final AdministratorService administratorService;
 
+    // hasRole('ROLE_') ó hasAnyRole('ROLE_')
+    // hasAuthority('permission') ó hasAnyAuthority('permission')
+
     @PostMapping
-    public void createUnitAdministrative(AdministrativeUnit unit) {
-        administratorService.createUnitAdministrative(unit);
+    public void createAdministrativeUnit(AdministrativeUnit unit) {
+        administratorService.createAdministrativeUnit(unit);
+    }
+
+    @PostMapping
+    public void createHeadOfAdministrativeUnit(Responsible headOfAdministrativeUnit) {
+        administratorService.createHeadOfAdministrativeUnit(headOfAdministrativeUnit);
     }
 
     @GetMapping
-    public List<AdministrativeUnit> getUnitsAdministrative() {
-        return administratorService.getUnitsAdministrative();
+    public List<AdministrativeUnit> getAdministrativeUnits() {
+        return administratorService.getAdministrativeUnits();
     }
 
     @GetMapping(path = "{id}")
-    public AdministrativeUnit getUnitAdministrativeById(@PathVariable("id") Long id) {
-        return administratorService.getUnitAdministrativeById(id);
+    public AdministrativeUnit getAdministrativeUnitById(@PathVariable("id") Long id) {
+        return administratorService.getAdministrativeUnitById(id);
     }
 }

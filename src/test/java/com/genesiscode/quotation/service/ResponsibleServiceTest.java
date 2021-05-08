@@ -117,12 +117,12 @@ class ResponsibleServiceTest {
             responsible.setRole(roleInvalid);
 
             //WHEN
-            Exception thrownException = assertThrows(IllegalStateException.class,
+            Exception thrownException = assertThrows(IllegalArgumentException.class,
                                     () -> serviceUnderTest.createHeadOfDirectionUnit(responsible));
             //THEN
             assertAll(
                 () -> assertThat(thrownException)
-                        .isExactlyInstanceOf(IllegalStateException.class)
+                        .isExactlyInstanceOf(IllegalArgumentException.class)
                         .hasMessageContaining("You couldn't create this Role"),
                 () -> then(responsibleRepository).should(never()).save(any(Responsible.class))
             );

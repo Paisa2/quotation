@@ -25,8 +25,8 @@ public class ResponsibleController {
 
     @PostMapping(path = "/headOfAdministrativeUnit/write:headOfDirectionUnit")
     @PreAuthorize("hasAuthority('write:headOfDirectionUnit')")
-    public void createHeadOfDirectionUnit(@RequestBody Responsible responsible) {
-        responsibleService.createHeadOfDirectionUnit(responsible);
+    public void createHeadOfDirectionUnit(@RequestBody Responsible headOfDirectionUnit) {
+        responsibleService.createHeadOfDirectionUnit(headOfDirectionUnit);
     }
 
 }

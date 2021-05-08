@@ -1,6 +1,9 @@
 package com.genesiscode.quotation.service;
 import com.genesiscode.quotation.domain.unit.AdministrativeUnit;
-import com.genesiscode.quotation.repository.UnitAdministrativeRepository;
+import com.genesiscode.quotation.domain.user.Responsible;
+import com.genesiscode.quotation.repository.ResponsibleRepository;
+import com.genesiscode.quotation.repository.AdministrativeUnitRepository;
+import com.genesiscode.quotation.security.RoleResponsible;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -14,83 +17,161 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 class AdministratorServiceTest {
 
-    @Mock
-    private UnitAdministrativeRepository repository;
+    @Mock private AdministrativeUnitRepository administrativeUnitRepository;
+    @Captor ArgumentCaptor<AdministrativeUnit> captorAdministrativeUnit;
+
+    @Mock private ResponsibleRepository responsibleRepository;
+    @Captor ArgumentCaptor<Responsible> captorResponsible;
+
     private AdministratorService serviceUnderTest;
 
     private static final Long VALID_ID = 1L;
     private static final Long INVALID_ID = 100L;
-    private static final String ENTITY_NAME = "Fake Name";
+    private static final String ADMINISTRATIVE_UNIT_NAME = "Fake Name";
+
+    private static final String RESPONSIBLE_NAME = "Fake Name";
+    private static final String RESPONSIBLE_LAST_NAME = "Fake Last Name";
+    private static final String RESPONSIBLE_EMAIL = "Fake Email";
+
     private static final int ONE_INVOCATION = 1;
 
-    private AdministrativeUnit getUnitAdministrative() {
+    private AdministrativeUnit getAdministrativeUnit() {
         AdministrativeUnit unit = new AdministrativeUnit();
         unit.setId(VALID_ID);
-        unit.setName(ENTITY_NAME);
+        unit.setName(ADMINISTRATIVE_UNIT_NAME);
         return unit;
     }
+    private Responsible getResponsible(RoleResponsible role) {
+        Responsible responsible = new Responsible();
+        responsible.setName(RESPONSIBLE_NAME);
+        responsible.setLastName(RESPONSIBLE_LAST_NAME);
+        responsible.setEmail(RESPONSIBLE_EMAIL);
+        responsible.setRole(role);
+        return responsible;
+    }
+
     @BeforeEach
     void setUp() {
-        this.serviceUnderTest = new AdministratorService(repository);
+        this.serviceUnderTest = new AdministratorService(administrativeUnitRepository, responsibleRepository);
     }
 
     @Nested
-    @DisplayName("Create Unit Administrative")
+    @DisplayName("Create Administrative Unit")
     class CreateAdministrativeUnitMethodTest {
 
         @Test
-        @DisplayName("cannot create when Unit Administrative is null")
-        void cannotCreateWhenUnitAdministrativeIsNull() {
+        @DisplayName("thrown exception when administrative unit is null")
+        void thrownExceptionWhenAdministrativeUnitIsNull() {
             //GIVEN
 
             //WHEN
             Exception thrownException = assertThrows(IllegalStateException.class,
-                    () -> serviceUnderTest.createUnitAdministrative(null));
+                    () -> serviceUnderTest.createAdministrativeUnit(null));
 
             //THEN
             assertAll(
-                () -> assertThat(thrownException)
-                        .isExactlyInstanceOf(IllegalStateException.class)
-                        .hasMessageContaining("Unit Administrative must not be null"),
-                () -> then(repository).should(never()).save(any())
+                    () -> assertThat(thrownException)
+                            .isExactlyInstanceOf(IllegalStateException.class)
+                            .hasMessageContaining("Administrative Unit must not be null"),
+                    () -> then(administrativeUnitRepository).should(never()).save(any(AdministrativeUnit.class))
             );
         }
-
 
         @Test
         @DisplayName("can create the unit administrative")
         void canCreateTheUnitAdministrative() {
             //GIVEN
-            AdministrativeUnit unit = getUnitAdministrative();
+            AdministrativeUnit unit = getAdministrativeUnit();
+
             //WHEN
-            serviceUnderTest.createUnitAdministrative(unit);
+            serviceUnderTest.createAdministrativeUnit(unit);
+
             //THEN
-            ArgumentCaptor<AdministrativeUnit> repositoryCaptor = ArgumentCaptor.forClass(AdministrativeUnit.class);
             assertAll(
-                () -> verify(repository, times(ONE_INVOCATION)).save(repositoryCaptor.capture()),
-                () -> { AdministrativeUnit unitCaptured = repositoryCaptor.getValue();
-                        assertThat(unitCaptured).isEqualTo(unit); }
+                () -> verify(administrativeUnitRepository, times(ONE_INVOCATION)).save(captorAdministrativeUnit.capture()),
+                () -> assertThat(captorAdministrativeUnit.getValue()).isEqualTo(unit)
             );
         }
     }
-    
+
     @Nested
-    @DisplayName("Get Units Administrative")
-    class GetUnitsAdministrativeMethodTest {
+    @DisplayName("Create Responsible Of Administrative Unit")
+    class CreateResponsibleOfAdministrativeUnit {
 
         @Test
-        @DisplayName("can get units administrative")
-        void canGetUnitsAdministrative() {
+        @DisplayName("thrown exception when responsible is null")
+        void thrownExceptionWhenResponsibleIsNull() {
             //GIVEN
+
             //WHEN
-            serviceUnderTest.getUnitsAdministrative();
+            Exception thrownException = assertThrows(IllegalStateException.class,
+                                        () -> serviceUnderTest.createHeadOfAdministrativeUnit(null));
             //THEN
-            verify(repository, times(ONE_INVOCATION)).findAll();
+            assertAll(
+                () -> assertThat(thrownException)
+                            .isExactlyInstanceOf(IllegalStateException.class)
+                            .hasMessageContaining("Responsible must not be null"),
+                () -> then(responsibleRepository).should(never()).save(any(Responsible.class))
+            );
+        }
+
+        @Test
+        @DisplayName("thrown exception when role is incorrect")
+        void thrownExceptionWhenRoleIsIncorrect() {
+            //GIVEN
+            RoleResponsible incorrectRole = RoleResponsible.HEAD_OF_DEPENDENCY_EXPENSE_UNIT;
+            Responsible responsible = getResponsible(incorrectRole);
+
+            //WHEN
+            Exception thrownException = assertThrows(IllegalArgumentException.class,
+                                    () -> serviceUnderTest.createHeadOfAdministrativeUnit(responsible));
+            //THEN
+            assertAll(
+                () -> assertThat(thrownException)
+                            .isExactlyInstanceOf(IllegalArgumentException.class)
+                            .hasMessageContaining("You couldn't create this Role"),
+                () -> then(responsibleRepository).should(never()).save(any(Responsible.class))
+            );
+        }
+
+        @Test
+        @DisplayName("can create responsible when data is correct")
+        void canCreateResponsibleWhenDataIsCorrect() {
+            //GIVEN
+            RoleResponsible correctRole = RoleResponsible.HEAD_OF_ADMINISTRATIVE_UNIT;
+            Responsible responsibleGiven = getResponsible(correctRole);
+
+            //WHEN
+            serviceUnderTest.createHeadOfAdministrativeUnit(responsibleGiven);
+
+            //THEN
+            assertAll(
+                () -> then(responsibleRepository).should(times(ONE_INVOCATION)).save(captorResponsible.capture()),
+                () -> assertThat(captorResponsible.getValue()).isEqualTo(responsibleGiven)
+            );
+        }
+
+    }
+    
+    @Nested
+    @DisplayName("Get Administrative Units")
+    class GetAdministrativeUnitsMethodTest {
+
+        @Test
+        @DisplayName("can get all administrative units")
+        void canGetAllAdministrativeUnits() {
+            //GIVEN
+
+            //WHEN
+            serviceUnderTest.getAdministrativeUnits();
+
+            //THEN
+            verify(administrativeUnitRepository, times(ONE_INVOCATION)).findAll();
         }
     }
 
     @Nested
-    @DisplayName("Get Unit Administrative By ID")
+    @DisplayName("Get Administrative Unit By ID")
     class GetAdministrativeUnit {
 
         @Test
@@ -100,14 +181,14 @@ class AdministratorServiceTest {
 
             //WHEN
             Exception thrownException = assertThrows(IllegalStateException.class,
-                    () -> serviceUnderTest.getUnitAdministrativeById(null));
+                    () -> serviceUnderTest.getAdministrativeUnitById(null));
 
             //THEN
             assertAll(
                 () -> assertThat(thrownException)
                         .isExactlyInstanceOf(IllegalStateException.class)
                         .hasMessageContaining("Id most not be null"),
-                () -> verify(repository, never()).findById(anyLong())
+                () -> verify(administrativeUnitRepository, never()).findById(anyLong())
             );
         }
 
@@ -115,32 +196,33 @@ class AdministratorServiceTest {
         @DisplayName("return a Unit Administrative with Id Valid")
         void returnAUnitAdministrativeWithIdValid() {
             //GIVEN
-            given(repository.findById(VALID_ID)).willReturn(Optional.of(getUnitAdministrative()));
+            given(administrativeUnitRepository.findById(VALID_ID)).willReturn(Optional.of(getAdministrativeUnit()));
 
             //WHEN
-            serviceUnderTest.getUnitAdministrativeById(VALID_ID);
+            serviceUnderTest.getAdministrativeUnitById(VALID_ID);
 
             //THEN
-            verify(repository, times(ONE_INVOCATION)).findById(VALID_ID);
+            verify(administrativeUnitRepository, times(ONE_INVOCATION)).findById(VALID_ID);
         }
 
         @Test
         @DisplayName("thrown a Exception when does exists Unit Administrative")
         void thrownAExceptionWhenDoesExistsUnitAdministrative() {
             //GIVEN
-            given(repository.findById(INVALID_ID)).willReturn(Optional.empty());
+            given(administrativeUnitRepository.findById(INVALID_ID)).willReturn(Optional.empty());
 
             //WHEN
             Exception thrownException = assertThrows(IllegalStateException.class,
-                    () -> serviceUnderTest.getUnitAdministrativeById(INVALID_ID));
+                    () -> serviceUnderTest.getAdministrativeUnitById(INVALID_ID));
             //THEN
             assertAll(
-                    () -> verify(repository,times(ONE_INVOCATION)).findById(INVALID_ID),
+                    () -> verify(administrativeUnitRepository,times(ONE_INVOCATION)).findById(INVALID_ID),
                     () -> assertThat(thrownException)
                             .isExactlyInstanceOf(IllegalStateException.class)
                             .hasMessageContaining("No exists this unit administrative with id " + INVALID_ID)
             );
         }
     }
+
 
 }

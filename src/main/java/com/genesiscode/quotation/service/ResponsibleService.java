@@ -29,7 +29,7 @@ public class ResponsibleService {
         checkDataType(responsible, Responsible.class, "Data Type incompatible");
 
         if(responsible.getRole() != RoleResponsible.HEAD_OF_DIRECTION)
-            throw new IllegalStateException("You couldn't create this Role");
+            throw new IllegalArgumentException("You couldn't create this Role");
         responsibleRepository.save(responsible);
 
     }

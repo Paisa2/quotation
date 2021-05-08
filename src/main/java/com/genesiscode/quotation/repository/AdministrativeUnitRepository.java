@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UnitAdministrativeRepository extends JpaRepository<AdministrativeUnit, Long> {
+public interface AdministrativeUnitRepository extends JpaRepository<AdministrativeUnit, Long> {
 
 
 }

@@ -1,7 +1,11 @@
 package com.genesiscode.quotation.service;
 import com.genesiscode.quotation.domain.unit.AdministrativeUnit;
-import com.genesiscode.quotation.repository.UnitAdministrativeRepository;
+import com.genesiscode.quotation.domain.user.Responsible;
+import com.genesiscode.quotation.repository.ResponsibleRepository;
+import com.genesiscode.quotation.repository.AdministrativeUnitRepository;
 import static com.genesiscode.quotation.utils.Preconditions.*;
+
+import com.genesiscode.quotation.security.RoleResponsible;
 import lombok.*;
 import org.springframework.stereotype.*;
 import java.util.*;
@@ -10,27 +14,36 @@ import java.util.*;
 @Service
 public class AdministratorService {
 
-    private final UnitAdministrativeRepository unitAdministrativeRepository;
+    private final AdministrativeUnitRepository administrativeUnitRepository;
+    private final ResponsibleRepository responsibleRepository;
 
-    public void createUnitAdministrative(AdministrativeUnit unit) {
-        checkArgument(unit != null, "Unit Administrative must not be null");
+    public void createAdministrativeUnit(AdministrativeUnit unit) {
+        checkArgument(unit != null, "Administrative Unit must not be null");
         checkDataType(unit, AdministrativeUnit.class , "Data Type Incompatible");
 
-        unitAdministrativeRepository.save(unit);
+        administrativeUnitRepository.save(unit);
     }
 
-    public List<AdministrativeUnit> getUnitsAdministrative() {
-        return unitAdministrativeRepository.findAll();
+    public void createHeadOfAdministrativeUnit(Responsible headOfAdministrativeUnit) {
+        checkArgument(headOfAdministrativeUnit != null, "Responsible must not be null");
+        checkDataType(headOfAdministrativeUnit, Responsible.class, "Data Type Incompatible");
+
+        if(headOfAdministrativeUnit.getRole() != RoleResponsible.HEAD_OF_ADMINISTRATIVE_UNIT)
+            throw new IllegalArgumentException("You couldn't create this Role");
+
+        responsibleRepository.save(headOfAdministrativeUnit);
     }
 
-    public AdministrativeUnit getUnitAdministrativeById(Long id) {
+    public List<AdministrativeUnit> getAdministrativeUnits() {
+        return administrativeUnitRepository.findAll();
+    }
+
+    public AdministrativeUnit getAdministrativeUnitById(Long id) {
         checkArgument(id != null, "Id most not be null");
         checkDataType(id, Long.class , "Data Type Incompatible");
 
-        return unitAdministrativeRepository.findById(id)
+        return administrativeUnitRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException
                         ("No exists this unit administrative with id " + id));
     }
-
-
 }
