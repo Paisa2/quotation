@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdministratorService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">quotation</a> &gt; <a href="index.source.html" class="el_package">com.genesiscode.quotation.service</a> &gt; <span class="el_source">AdministratorService.java</span></div><h1>AdministratorService.java</h1><pre class="source lang-java linenums">package com.genesiscode.quotation.service;
+import com.genesiscode.quotation.domain.unit.UnitAdministrative;
+import com.genesiscode.quotation.repository.UnitAdministrativeRepository;
+import static com.genesiscode.quotation.utils.Preconditions.*;
+import lombok.*;
+import org.springframework.stereotype.*;
+import java.util.*;
+
+<span class="fc" id="L9">@AllArgsConstructor</span>
+@Service
+public class AdministratorService {
+
+    private final UnitAdministrativeRepository unitAdministrativeRepository;
+
+    public void createUnitAdministrative(UnitAdministrative unit) {
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        checkArgument(unit != null, &quot;Unit Administrative must not be null&quot;);</span>
+<span class="fc" id="L17">        checkDataType(unit, UnitAdministrative.class , &quot;Data Type Incompatible&quot;);</span>
+
+<span class="fc" id="L19">        unitAdministrativeRepository.save(unit);</span>
+<span class="fc" id="L20">    }</span>
+
+    public List&lt;UnitAdministrative&gt; getUnitsAdministrative() {
+<span class="fc" id="L23">        return unitAdministrativeRepository.findAll();</span>
+    }
+
+    public UnitAdministrative getUnitAdministrativeById(Long id) {
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        checkArgument(id != null, &quot;Id most not be null&quot;);</span>
+<span class="fc" id="L28">        checkDataType(id, Long.class , &quot;Data Type Incompatible&quot;);</span>
+
+<span class="fc" id="L30">        return unitAdministrativeRepository.findById(id)</span>
+<span class="fc" id="L31">                .orElseThrow(() -&gt; new IllegalStateException</span>
+                        (&quot;No exists this unit administrative with id &quot; + id));
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

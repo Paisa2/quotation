@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.genesiscode.quotation.QuotationApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.283 s - in com.genesiscode.quotation.QuotationApplicationTests

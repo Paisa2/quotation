@@ -1,0 +1,9 @@
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/QuotationApplication.java
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/service/AdministratorService.java
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/domain/rol/Administrator.java
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/controller/AdministratorController.java
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/utils/Preconditions.java
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/repository/UnitAdministrativeRepository.java
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/domain/unit/UnitAdministrative.java
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/domain/unit/DependencyAdministrative.java
+/home/josemaria/Desktop/back-end/quotation/src/main/java/com/genesiscode/quotation/config/Config.java
