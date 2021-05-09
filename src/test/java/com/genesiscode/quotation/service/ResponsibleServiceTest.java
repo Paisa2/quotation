@@ -1,4 +1,5 @@
 package com.genesiscode.quotation.service;
+import com.genesiscode.quotation.domain.ExpenseUnit;
 import com.genesiscode.quotation.domain.unit.DirectionUnit;
 import com.genesiscode.quotation.domain.user.Responsible;
 import com.genesiscode.quotation.repository.*;
@@ -16,10 +17,9 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 class ResponsibleServiceTest {
 
-    @Mock
-    private DirectionUnitRepository directionUnitRepository;
-    @Mock
-    private ResponsibleRepository responsibleRepository;
+    @Mock private DirectionUnitRepository directionUnitRepository;
+    @Mock private ResponsibleRepository responsibleRepository;
+    @Mock private ExpenseUnitRepository expenseUnitRepository;
     private ResponsibleService serviceUnderTest;
 
 
@@ -44,7 +44,8 @@ class ResponsibleServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.serviceUnderTest = new ResponsibleService(directionUnitRepository, responsibleRepository);
+       this.serviceUnderTest = new ResponsibleService(directionUnitRepository,
+               responsibleRepository, expenseUnitRepository);
     }
 
     @Nested
@@ -150,5 +151,32 @@ class ResponsibleServiceTest {
             );
         }
     }
+
+    @Nested
+    @DisplayName("Create Expense Unit")
+    class CreateExpenseUnit {
+
+        @Test
+        @DisplayName("thrown exception when expense unit is null")
+        void thrownExceptionWhenExpenseUnitIsNull() {
+            //GIVEN
+
+            //WHEN
+            Exception thrownException = assertThrows(IllegalStateException.class,
+                                        () -> serviceUnderTest.createExpenseUnit(null));
+            //THEN
+            assertAll(
+                () -> assertThat(thrownException)
+                        .isExactlyInstanceOf(IllegalStateException.class)
+                        .hasMessageContaining("Expense Unit cannot be null"),
+                () -> then(expenseUnitRepository).should(never()).save(any(ExpenseUnit.class))
+            );
+        }
+
+
+
+
+    }
+
 
 }
