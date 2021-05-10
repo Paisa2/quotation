@@ -25,11 +25,12 @@ public class RegistrationService {
         if(! isValidEmail)
             throw new IllegalStateException("Email not valid");
 
-        String token = responsibleService.signUp(
-                new Responsible(request.getName(), request.getLastName(), request.getEmail(),
-                        request.getPassword(), RoleResponsible.HEAD_OF_DIRECTION));
-        String link = "";
-        emailSender.send(request.getEmail(), buildEmail(request.getEmail(), link));
+
+        String token = responsibleService.signUp(new Responsible(request.getName(), request.getLastName(), request.getEmail(),
+                                            request.getPassword(), request.getRole()));
+
+        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
+        emailSender.send(request.getEmail(), buildEmail(request.getName(), link));
         return token;
     }
 

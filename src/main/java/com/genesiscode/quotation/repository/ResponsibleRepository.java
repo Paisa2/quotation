@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Repository
+@Transactional(readOnly = true)
 public interface ResponsibleRepository extends JpaRepository<Responsible, Long> {
 
     Optional<Responsible> findByEmail(String email);
@@ -19,5 +20,5 @@ public interface ResponsibleRepository extends JpaRepository<Responsible, Long> 
     @Query("update Responsible r " +
             "set r.enabled = true " +
             "where r.email = ?1")
-    int enableResponsible(String email);
+    void enableResponsible(String email);
 }

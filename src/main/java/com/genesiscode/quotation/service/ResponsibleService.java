@@ -29,20 +29,11 @@ public class ResponsibleService implements UserDetailsService {
     private final DirectionUnitRepository directionUnitRepository;
     private final ResponsibleRepository responsibleRepository;
     private final ExpenseUnitRepository expenseUnitRepository;
+    private final ConfirmationTokenService confirmationTokenService;
 
-    private final ConfirmationTokenService tokenService;
-
-    public int enableResponsible(String email) {
-        return responsibleRepository.enableResponsible(email);
+    public void enableResponsible(String email) {
+        responsibleRepository.enableResponsible(email);
     }
-//    @Autowired
-//    public ResponsibleService(DirectionUnitRepository directionUnitRepository,
-//                              ResponsibleRepository responsibleRepository,
-//                              ExpenseUnitRepository expenseUnitRepository) {
-//        this.directionUnitRepository = directionUnitRepository;
-//        this.responsibleRepository = responsibleRepository;
-//        this.expenseUnitRepository = expenseUnitRepository;
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -50,16 +41,18 @@ public class ResponsibleService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException
                         (String.format(USER_NOT_FOUND_MESSAGE, email)));
     }
+
     @Transactional
     public String signUp(Responsible responsible) {
-        boolean responsibleExists = responsibleRepository.findByEmail(responsible.getEmail())
+        boolean responsibleExists = responsibleRepository
+                                        .findByEmail(responsible.getEmail())
                                         .isPresent();
         if(responsibleExists)
             throw new IllegalStateException("Email already taken");
-
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = bCryptPasswordEncoder.encode(responsible.getPassword());
         responsible.setPassword(encodedPassword);
+
         responsibleRepository.save(responsible);
 
         //TODO: Send Confirmation token
@@ -67,7 +60,7 @@ public class ResponsibleService implements UserDetailsService {
         ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(),
                                             LocalDateTime.now().plusMinutes(15), responsible);
 
-        tokenService.saveConfirmationToken(confirmationToken);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
 
         //TODO: send email
 
@@ -110,7 +103,6 @@ public class ResponsibleService implements UserDetailsService {
         expenseUnitRepository.save(unit);
     }
 
-
     public void createHeadOfExpenseUnit(Responsible headOFExpenseUnit) {
         checkArgument(headOFExpenseUnit != null, String.format(MUST_NOT_BE_NULL, "Head of Expense Unit"));
         checkDataType(headOFExpenseUnit, Responsible.class, TYPE_INCOMPATIBLE);
@@ -124,7 +116,6 @@ public class ResponsibleService implements UserDetailsService {
     public List<ExpenseUnit> getExpenseUnits() {
         return expenseUnitRepository.findAll();
     }
-
 
     public ExpenseUnit getExpenseUnitById(Long id) {
         checkArgument(id != null, String.format(MUST_NOT_BE_NULL, "ID"));

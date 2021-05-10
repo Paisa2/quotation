@@ -16,12 +16,12 @@ public class AdministratorController {
     // hasAuthority('permission') ó hasAnyAuthority('permission')
 
     @PostMapping(path = "/write:administrativeUnit")
-    public void createAdministrativeUnit(AdministrativeUnit unit) {
+    public void createAdministrativeUnit(@RequestBody AdministrativeUnit unit) {
         administratorService.createAdministrativeUnit(unit);
     }
 
     @PostMapping(path = "/write:headOfAdministrativeUnit")
-    public void createHeadOfAdministrativeUnit(Responsible headOfAdministrativeUnit) {
+    public void createHeadOfAdministrativeUnit(@RequestBody Responsible headOfAdministrativeUnit) {
         administratorService.createHeadOfAdministrativeUnit(headOfAdministrativeUnit);
     }
 
