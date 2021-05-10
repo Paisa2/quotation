@@ -8,6 +8,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @AllArgsConstructor
 @Configuration
@@ -29,6 +34,19 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowedHeaders(Arrays.asList
+                ("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(daoAuthenticationProvider());
@@ -41,48 +59,4 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(responsibleService);
         return provider;
     }
-
-
-    /*
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-
-        UserDetails rafael = User.builder()
-                .username("rafael")
-                .password(passwordEncoder.encode("rafael17"))
-//                .roles(HEAD_OF_ADMINISTRATIVE_UNIT.name())
-                .authorities(HEAD_OF_ADMINISTRATIVE_UNIT.getGrantedAuthorities())
-                .build();
-
-        UserDetails juan = User.builder()
-                .username("juan")
-                .password(passwordEncoder.encode("juan17"))
-                //.roles(HEAD_OF_DEPENDENCY_ADMINISTRATIVE_UNIT.name())
-                .authorities(HEAD_OF_DEPENDENCY_ADMINISTRATIVE_UNIT.getGrantedAuthorities())
-                .build();
-
-        UserDetails alex = User.builder()
-                .username("alex")
-                .password(passwordEncoder.encode("alex17"))
-                //.roles(HEAD_OF_DIRECTION.name())
-                .authorities(HEAD_OF_DIRECTION.getGrantedAuthorities())
-                .build();
-
-        UserDetails cynthia = User.builder()
-                .username("cynthia")
-                .password(passwordEncoder.encode("cynthia17"))
-                //.roles(HEAD_OF_EXPENSE_UNIT.name())
-                .authorities(HEAD_OF_EXPENSE_UNIT.getGrantedAuthorities())
-                .build();
-
-        UserDetails jose = User.builder()
-                .username("jose")
-                .password(passwordEncoder.encode("jose17"))
-                //.roles(HEAD_OF_DEPENDENCY_EXPENSE_UNIT.name())
-                .authorities(HEAD_OF_DEPENDENCY_EXPENSE_UNIT.getGrantedAuthorities())
-                .build();
-
-        return new InMemoryUserDetailsManager(rafael, juan, alex, cynthia, jose);
-    }*/
 }
