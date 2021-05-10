@@ -21,4 +21,5 @@ public class AdministrativeUnit {
     public AdministrativeUnit(String name) {
         this.name = name;
     }
+
 }

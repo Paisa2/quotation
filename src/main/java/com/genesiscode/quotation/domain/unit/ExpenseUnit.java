@@ -1,4 +1,4 @@
-package com.genesiscode.quotation.domain;
+package com.genesiscode.quotation.domain.unit;
 
 import lombok.*;
 

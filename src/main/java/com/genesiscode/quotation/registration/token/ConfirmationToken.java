@@ -1,13 +1,11 @@
 package com.genesiscode.quotation.registration.token;
 import com.genesiscode.quotation.domain.user.Responsible;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.*;
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.*;
 
 @Setter @Getter @NoArgsConstructor
+@Entity
 public class ConfirmationToken {
 
     @Id
@@ -18,6 +16,7 @@ public class ConfirmationToken {
     private String token;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
+    private LocalDateTime confirmedAt;
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "responsible_id")

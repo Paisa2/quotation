@@ -1,17 +1,13 @@
 package com.genesiscode.quotation.controller;
-
-import com.genesiscode.quotation.domain.ExpenseUnit;
-import com.genesiscode.quotation.domain.unit.DirectionUnit;
+import com.genesiscode.quotation.domain.unit.*;
 import com.genesiscode.quotation.domain.user.Responsible;
 import com.genesiscode.quotation.service.ResponsibleService;
-import lombok.*;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.*;
 import org.springframework.web.bind.annotation.*;
+import lombok.*;
+import java.util.*;
 
-import java.util.List;
-
-@AllArgsConstructor
-@RestController
+@AllArgsConstructor  @RestController
 @RequestMapping(path = "/api/responsible")
 public class ResponsibleController {
 
@@ -20,48 +16,52 @@ public class ResponsibleController {
     // hasRole('ROLE_') ó hasAnyRole('ROLE_')
     // hasAuthority('permission') ó hasAnyAuthority('permission')
 
+    @PreAuthorize("hasRole('ROLE_HEAD_OF_ADMINISTRATIVE_UNIT')")
     @PostMapping(path = "/headOfAdministrativeUnit/write:directionUnit")
-    @PreAuthorize("hasAuthority('write:directionUnit')")
     public void createDirectionUnit(@RequestBody DirectionUnit directionUnit) {
         responsibleService.createDirectionUnit(directionUnit);
     }
 
+    @PreAuthorize("hasRole('ROLE_HEAD_OF_ADMINISTRATIVE_UNIT')")
     @PostMapping(path = "/headOfAdministrativeUnit/write:headOfDirectionUnit")
-    @PreAuthorize("hasAuthority('write:headOfDirectionUnit')")
     public void createHeadOfDirectionUnit(@RequestBody Responsible headOfDirectionUnit) {
         responsibleService.createHeadOfDirectionUnit(headOfDirectionUnit);
     }
 
-    @GetMapping
+    @PreAuthorize("hasRole('ROLE_HEAD_OF_ADMINISTRATIVE_UNIT')")
+    @GetMapping(path = "/headOfAdministrativeUnit/read:directionUnits")
     public List<DirectionUnit> getDirectionUnits() {
         return responsibleService.getDirectionUnits();
     }
 
-    @GetMapping(path = "{id}")
+    @PreAuthorize("hasRole('ROLE_HEAD_OF_ADMINISTRATIVE_UNIT')")
+    @GetMapping(path = "/headOfAdministrativeUnit/read:directionUnitById/{id}")
     public DirectionUnit getDirectionUnitById(@PathVariable Long id) {
         return responsibleService.getDirectionUnitById(id);
     }
 
-    @PostMapping(path = "/headOfDirectionUnit")
+    @PreAuthorize("hasRole('ROLE_HEAD_OF_DIRECTION')")
+    @PostMapping(path = "/headOfDirectionUnit/write:expenseUnit")
     public void createExpenseUnit(ExpenseUnit unit) {
         responsibleService.createExpenseUnit(unit);
     }
 
-    @PostMapping
+    @PreAuthorize("hasRole('ROLE_HEAD_OF_DIRECTION')")
+    @PostMapping(path = "/headOfDirectionUnit/write:headOfExpenseUnit")
     public void createHeadOfExpenseUnit(@RequestBody Responsible responsible) {
         responsibleService.createHeadOfExpenseUnit(responsible);
     }
 
-    @GetMapping
+    @PreAuthorize("hasRole('ROLE_HEAD_OF_DIRECTION')")
+    @GetMapping(path = "/headOfDirectionUnit/read:expenseUnits")
     public List<ExpenseUnit> getExpenseUnits() {
         return responsibleService.getExpenseUnits();
     }
 
-    @GetMapping(path = "{id}")
+    @PreAuthorize("hasRole('ROLE_HEAD_OF_DIRECTION')")
+    @GetMapping(path = "/headOfDirectionUnit/read:expenseUnitById/{id}")
     public ExpenseUnit getExpenseUnitById(@PathVariable("id") Long id) {
         return responsibleService.getExpenseUnitById(id);
     }
 
-    
-    
 }

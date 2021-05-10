@@ -1,5 +1,5 @@
 package com.genesiscode.quotation.service;
-import com.genesiscode.quotation.domain.ExpenseUnit;
+import com.genesiscode.quotation.domain.unit.ExpenseUnit;
 import com.genesiscode.quotation.domain.unit.DirectionUnit;
 import com.genesiscode.quotation.domain.user.Responsible;
 import com.genesiscode.quotation.repository.*;
@@ -42,10 +42,16 @@ class ResponsibleServiceTest {
         return unit;
     }
 
+    private ExpenseUnit getExpenseUnit() {
+        ExpenseUnit unit = new ExpenseUnit();
+        unit.setName(ENTITY_NAME);
+        return unit;
+    }
+
     @BeforeEach
     void setUp() {
-       this.serviceUnderTest = new ResponsibleService(directionUnitRepository,
-               responsibleRepository, expenseUnitRepository);
+       //this.serviceUnderTest = new ResponsibleService(directionUnitRepository,
+         //      responsibleRepository, expenseUnitRepository);
     }
 
     @Nested
@@ -82,8 +88,7 @@ class ResponsibleServiceTest {
             ArgumentCaptor<DirectionUnit> argumentCaptor = ArgumentCaptor.forClass(DirectionUnit.class);
             assertAll(
                 () -> verify(directionUnitRepository, times(ONE_INVOCATION)).save(argumentCaptor.capture()),
-                () -> { DirectionUnit unitCaptured = argumentCaptor.getValue();
-                        assertThat(unitCaptured).isEqualTo(unit); }
+                () -> assertThat(argumentCaptor.getValue()).isEqualTo(unit)
             );
         }
     }
@@ -173,9 +178,11 @@ class ResponsibleServiceTest {
             );
         }
 
+        @Test
+        @DisplayName("can create expense unit with valid data")
+        void canCreateExpenseUnitWithValidData() {
 
-
-
+        }
     }
 
 

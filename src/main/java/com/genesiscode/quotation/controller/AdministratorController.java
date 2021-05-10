@@ -15,22 +15,22 @@ public class AdministratorController {
     // hasRole('ROLE_') ó hasAnyRole('ROLE_')
     // hasAuthority('permission') ó hasAnyAuthority('permission')
 
-    @PostMapping
+    @PostMapping(path = "/write:administrativeUnit")
     public void createAdministrativeUnit(AdministrativeUnit unit) {
         administratorService.createAdministrativeUnit(unit);
     }
 
-    @PostMapping
+    @PostMapping(path = "/write:headOfAdministrativeUnit")
     public void createHeadOfAdministrativeUnit(Responsible headOfAdministrativeUnit) {
         administratorService.createHeadOfAdministrativeUnit(headOfAdministrativeUnit);
     }
 
-    @GetMapping
+    @GetMapping(path = "/read:administrativeUnits")
     public List<AdministrativeUnit> getAdministrativeUnits() {
         return administratorService.getAdministrativeUnits();
     }
 
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "/read:administrativeUnitById/{id}")
     public AdministrativeUnit getAdministrativeUnitById(@PathVariable("id") Long id) {
         return administratorService.getAdministrativeUnitById(id);
     }
