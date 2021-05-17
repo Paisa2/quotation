@@ -1,9 +1,9 @@
 package com.genesiscode.quotation.registration;
 
-import com.genesiscode.quotation.domain.user.Responsible;
+import com.genesiscode.quotation.domain.Responsible;
 import com.genesiscode.quotation.email.EmailSender;
+import com.genesiscode.quotation.email.EmailService;
 import com.genesiscode.quotation.registration.token.*;
-import com.genesiscode.quotation.security.RoleResponsible;
 import com.genesiscode.quotation.service.ResponsibleService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,17 +20,19 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
+    private static final String HOST = "http://localhost:8080";
+
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if(! isValidEmail)
             throw new IllegalStateException("Email not valid");
 
+        String token = responsibleService.createResponsible(new Responsible(request.getName(),
+                                                request.getLastName(), request.getEmail(), request.getRole()));
 
-        String token = responsibleService.signUp(new Responsible(request.getName(), request.getLastName(), request.getEmail(),
-                                            request.getPassword(), request.getRole()));
-
-        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-        emailSender.send(request.getEmail(), buildEmail(request.getName(), link));
+        String link = HOST + "/api/registration/confirm?token=" + token;
+        //System.out.println(emailSender.toString());
+        emailSender.send(request.getEmail(), buildEmail(request.getName(), token,  link));
         return token;
     }
 
@@ -52,12 +54,11 @@ public class RegistrationService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        responsibleService.enableResponsible(
-                confirmationToken.getResponsible().getEmail());
+        responsibleService.enableResponsible(confirmationToken.getResponsible().getEmail());
         return "confirmed";
     }
 
-    private String buildEmail(String name, String link) {
+    private String buildEmail(String name, String password, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -113,7 +114,9 @@ public class RegistrationService {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p>" +
+                "            <p style=\"Margin:0 0 10px 0;font-size:10px;line-height:15px;color:#0b0c0c\">Password " + password + ",</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

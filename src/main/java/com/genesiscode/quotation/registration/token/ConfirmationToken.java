@@ -1,5 +1,5 @@
 package com.genesiscode.quotation.registration.token;
-import com.genesiscode.quotation.domain.user.Responsible;
+import com.genesiscode.quotation.domain.Responsible;
 import lombok.*;
 import javax.persistence.*;
 import java.time.*;

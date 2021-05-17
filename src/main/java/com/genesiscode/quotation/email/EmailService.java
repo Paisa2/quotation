@@ -1,6 +1,5 @@
 package com.genesiscode.quotation.email;
-
-import lombok.AllArgsConstructor;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailException;
@@ -8,7 +7,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -27,15 +25,13 @@ public class EmailService implements EmailSender{
         try {
             helper.setText(email, true);
             helper.setTo(to);
+            System.out.println("email: " + email + "to: " + to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("josmariaguilar@protonmail.com");
+            helper.setFrom("genesiscode91@gmail.com");
             mailSender.send(mimeMessage);
         } catch(MessagingException | MailException mailException) {
             LOGGER.error("failed to send email", mailException);
             throw new IllegalStateException("Failed to send email");
         }
-
-
-
     }
 }

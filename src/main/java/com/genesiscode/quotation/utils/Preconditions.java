@@ -21,7 +21,7 @@ public final class Preconditions {
 
     /**
      *
-     *
+     * @param message the error message to set if it does not meet the condition.
      * */
     public static void checkDataType(Object data, Class<?> classVerify, String message) {
         if(! data.getClass().equals(classVerify))

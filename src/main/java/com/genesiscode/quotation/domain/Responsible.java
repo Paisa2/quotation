@@ -1,19 +1,14 @@
-package com.genesiscode.quotation.domain.user;
-import com.genesiscode.quotation.security.RoleResponsible;
+package com.genesiscode.quotation.domain;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
-@Getter @Setter @ToString @NoArgsConstructor @EqualsAndHashCode
-@Entity @Table(name = "responsibles")
-public class Responsible implements UserDetails {
+@NoArgsConstructor @Getter @Setter @ToString
+@Entity
+public class Responsible /*implements UserDetails */{
 
     @Id
+    @Column(name = "responsible_id")
     @SequenceGenerator(name = "responsible_sequence", sequenceName = "responsible_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "responsible_sequence")
     private Long id;
@@ -30,55 +25,55 @@ public class Responsible implements UserDetails {
     @Column(length = 100, nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RoleResponsible role;
-
     private Boolean locked = false;
     private Boolean enabled = false;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "role_id")
+    private Role role;
 
-    public Responsible(String name, String lastName, String email, String password, RoleResponsible role) {
+    public Responsible(String name, String lastName, String email, Role role) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
         this.role = role;
     }
+/*
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
-        return Collections.singletonList(authority);
+        return null;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return null;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !locked;
+        return false;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return false;
     }
+*/
+
 }
