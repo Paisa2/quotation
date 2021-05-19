@@ -1,5 +1,4 @@
 package com.genesiscode.quotation.domain;
-import com.genesiscode.quotation.domain.Responsible;
 import lombok.*;
 import javax.persistence.*;
 import java.time.*;
@@ -19,7 +18,7 @@ public class ConfirmationToken {
     private LocalDateTime confirmedAt;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "responsible_id")
+    @JoinColumn(nullable = false, referencedColumnName = "responsible_id")
     private Responsible responsible;
 
     public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt,

@@ -22,8 +22,4 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "permission_id"))
     private List<Permission> permission;
 
-    public Role(String name, List<Permission> permission) {
-        this.name = name;
-        this.permission = permission;
-    }
 }

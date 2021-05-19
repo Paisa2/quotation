@@ -1,5 +1,6 @@
 package com.genesiscode.quotation.service;
 import com.genesiscode.quotation.domain.*;
+import com.genesiscode.quotation.dto.ResponsibleView;
 import com.genesiscode.quotation.domain.ConfirmationToken;
 import com.genesiscode.quotation.repository.*;
 import lombok.*;
@@ -106,8 +107,8 @@ public class ResponsibleService /*implements UserDetailsService */{
         return roleRepository.findAll();
     }
 
-    public List<Responsible> getListResponsible() {
-        return responsibleRepository.getAllResponsible();
+    public List<ResponsibleView> getListResponsible() {
+        return responsibleRepository.findAllResponsible();
     }
 /*
     @Override

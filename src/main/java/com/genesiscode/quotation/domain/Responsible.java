@@ -1,7 +1,6 @@
 package com.genesiscode.quotation.domain;
 import lombok.*;
 import javax.persistence.*;
-import java.util.*;
 
 @NoArgsConstructor @Getter @Setter @ToString
 @Entity
@@ -28,7 +27,7 @@ public class Responsible /*implements UserDetails */{
     private Boolean locked = false;
     private Boolean enabled = false;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name= "role_id")
     private Role role;
 
@@ -39,6 +38,7 @@ public class Responsible /*implements UserDetails */{
         this.role = role;
         this.password = password;
     }
+
 /*
 
     @Override

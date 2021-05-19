@@ -1,5 +1,7 @@
 package com.genesiscode.quotation.controller;
 import com.genesiscode.quotation.domain.*;
+import com.genesiscode.quotation.dto.*;
+import com.genesiscode.quotation.dto.ResponsibleView;
 import com.genesiscode.quotation.service.RegistrationService;
 import com.genesiscode.quotation.service.ResponsibleService;
 
@@ -63,7 +65,7 @@ public class ResponsibleController {
     }
 
     @GetMapping(path = "/allResponsible")
-    public List<Responsible> getListResponsible() {
+    public List<ResponsibleView> getListResponsible() {
         return responsibleService.getListResponsible();
     }
 

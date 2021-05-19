@@ -1,9 +1,7 @@
 package com.genesiscode.quotation.repository;
-
 import com.genesiscode.quotation.domain.Responsible;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import com.genesiscode.quotation.dto.ResponsibleView;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -21,8 +19,8 @@ public interface ResponsibleRepository extends JpaRepository<Responsible, Long> 
             "where r.email = :email")
     void enableResponsible(@Param("email") String email);
 
-    @Modifying
-    @Query("select r from Responsible r")
-    List<Responsible> getAllResponsible();
-
+    @Query(value =  "select new com.genesiscode.quotation.dto.ResponsibleView(r.name, r.lastName, r.email, r.enabled, rol.name) " +
+                    "from Responsible r, Role rol " +
+                    "where r.id = rol.id")
+    List<ResponsibleView> findAllResponsible();
 }
