@@ -2,6 +2,7 @@ package com.genesiscode.quotation.service;
 import com.genesiscode.quotation.domain.*;
 import com.genesiscode.quotation.dto.ResponsibleView;
 import com.genesiscode.quotation.domain.ConfirmationToken;
+import com.genesiscode.quotation.dto.RoleView;
 import com.genesiscode.quotation.repository.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -103,8 +104,8 @@ public class ResponsibleService /*implements UserDetailsService */{
         responsibleRepository.enableResponsible(email);
     }
 
-    public List<Role> getListRoles() {
-        return roleRepository.findAll();
+    public List<RoleView> getListRoles() {
+        return roleRepository.getListRole();
     }
 
     public List<ResponsibleView> getListResponsible() {

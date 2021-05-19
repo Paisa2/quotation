@@ -42,7 +42,7 @@ public class ResponsibleController {
 
     @ApiOperation(value = "List<Role>")
     @GetMapping
-    public List<Role> getListRoles() {
+    public List<RoleView> getListRoles() {
         return responsibleService.getListRoles();
     }
 
