@@ -1,15 +1,17 @@
-package com.genesiscode.quotation.registration;
+package com.genesiscode.quotation.service;
 
+import com.genesiscode.quotation.domain.ConfirmationToken;
 import com.genesiscode.quotation.domain.Responsible;
-import com.genesiscode.quotation.email.EmailSender;
-import com.genesiscode.quotation.email.EmailService;
-import com.genesiscode.quotation.registration.token.*;
-import com.genesiscode.quotation.service.ResponsibleService;
+import com.genesiscode.quotation.domain.EmailSender;
+import com.genesiscode.quotation.utils.EmailValidator;
+import com.genesiscode.quotation.domain.RegistrationRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String HOST = "http://localhost:8080";
 
@@ -27,12 +30,11 @@ public class RegistrationService {
         if(! isValidEmail)
             throw new IllegalStateException("Email not valid");
 
-        String token = responsibleService.createResponsible(new Responsible(request.getName(),
-                                                request.getLastName(), request.getEmail(), request.getRole()));
-
-        String link = HOST + "/api/registration/confirm?token=" + token;
-        //System.out.println(emailSender.toString());
-        emailSender.send(request.getEmail(), buildEmail(request.getName(), token,  link));
+        String passwordGenerated = passwordEncoder.encode("password");
+        String token = responsibleService.createResponsible(new Responsible(request.getName(), request.getLastName(),
+                                                            request.getEmail(), passwordGenerated, request.getRole()));
+        String link = HOST + "/api/responsible/registration/confirm?token=" + token;
+        emailSender.send(request.getEmail(), buildEmail(request.getName(), passwordGenerated,  link));
         return token;
     }
 
@@ -40,8 +42,7 @@ public class RegistrationService {
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(() ->
-                        new IllegalStateException("token not found"));
+                .orElseThrow(() -> new IllegalStateException("token not found"));
 
         if (confirmationToken.getConfirmedAt() != null) {
             throw new IllegalStateException("email already confirmed");

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public interface ResponsibleRepository extends JpaRepository<Responsible, Long> {
@@ -20,5 +20,9 @@ public interface ResponsibleRepository extends JpaRepository<Responsible, Long> 
             "set r.enabled = true " +
             "where r.email = :email")
     void enableResponsible(@Param("email") String email);
+
+    @Modifying
+    @Query("select r from Responsible r")
+    List<Responsible> getAllResponsible();
 
 }

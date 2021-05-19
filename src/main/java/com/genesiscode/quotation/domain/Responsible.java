@@ -32,11 +32,12 @@ public class Responsible /*implements UserDetails */{
     @JoinColumn(name= "role_id")
     private Role role;
 
-    public Responsible(String name, String lastName, String email, Role role) {
+    public Responsible(String name, String lastName, String email, String password, Role role) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.role = role;
+        this.password = password;
     }
 /*
 

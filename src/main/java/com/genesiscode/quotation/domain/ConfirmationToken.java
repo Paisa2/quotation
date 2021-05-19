@@ -1,4 +1,4 @@
-package com.genesiscode.quotation.registration.token;
+package com.genesiscode.quotation.domain;
 import com.genesiscode.quotation.domain.Responsible;
 import lombok.*;
 import javax.persistence.*;

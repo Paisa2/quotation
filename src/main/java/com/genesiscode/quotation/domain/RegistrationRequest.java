@@ -1,4 +1,4 @@
-package com.genesiscode.quotation.registration;
+package com.genesiscode.quotation.domain;
 
 import com.genesiscode.quotation.domain.Role;
 import lombok.*;

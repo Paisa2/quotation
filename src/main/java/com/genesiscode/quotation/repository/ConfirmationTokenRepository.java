@@ -1,4 +1,5 @@
-package com.genesiscode.quotation.registration.token;
+package com.genesiscode.quotation.repository;
+import com.genesiscode.quotation.domain.ConfirmationToken;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

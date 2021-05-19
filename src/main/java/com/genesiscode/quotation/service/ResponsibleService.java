@@ -1,7 +1,6 @@
 package com.genesiscode.quotation.service;
 import com.genesiscode.quotation.domain.*;
-import com.genesiscode.quotation.registration.token.ConfirmationToken;
-import com.genesiscode.quotation.registration.token.ConfirmationTokenService;
+import com.genesiscode.quotation.domain.ConfirmationToken;
 import com.genesiscode.quotation.repository.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -83,25 +82,32 @@ public class ResponsibleService /*implements UserDetailsService */{
 
     @Transactional
     public String createResponsible(Responsible responsible) {
-        boolean responsibleExists = responsibleRepository
-                                        .findByEmail(responsible.getEmail()).isPresent();
+        boolean responsibleExists = responsibleRepository.findByEmail(responsible.getEmail())
+                                                            .isPresent();
 
         if(responsibleExists)
             throw new IllegalStateException("Email already taken");
 
         String token = UUID.randomUUID().toString();
-        responsible.setPassword(token);
+
         responsibleRepository.save(responsible);
         ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(),
                                             LocalDateTime.now().plusMinutes(15), responsible);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
         return token;
     }
 
 
     public void enableResponsible(String email) {
         responsibleRepository.enableResponsible(email);
+    }
+
+    public List<Role> getListRoles() {
+        return roleRepository.findAll();
+    }
+
+    public List<Responsible> getListResponsible() {
+        return responsibleRepository.getAllResponsible();
     }
 /*
     @Override

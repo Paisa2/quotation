@@ -1,5 +1,7 @@
-package com.genesiscode.quotation.registration.token;
+package com.genesiscode.quotation.service;
 
+import com.genesiscode.quotation.domain.ConfirmationToken;
+import com.genesiscode.quotation.repository.ConfirmationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
