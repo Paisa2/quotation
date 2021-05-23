@@ -1,9 +1,7 @@
 package com.genesiscode.quotation.dto;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter @AllArgsConstructor
+@Getter @AllArgsConstructor @EqualsAndHashCode
 public class RoleView {
 
     private final Long id;

@@ -10,8 +10,15 @@ import java.util.*;
 @Repository
 public interface ResponsibleRepository extends JpaRepository<Responsible, Long> {
 
-    @Query("select r.email from Responsible r where r.email = :email")
+    @Query("SELECT resp.email " +
+            "FROM Responsible resp " +
+            "WHERE resp.email = :email")
     Optional<Responsible> findByEmail(@Param("email") String email);
+
+    @Query("SELECT resp " +
+            "FROM Responsible resp " +
+            "WHERE resp.email = ?1")
+    Optional<Responsible> getResponsibleByEmail(String email);
 
     @Modifying
     @Query("update Responsible r " +
