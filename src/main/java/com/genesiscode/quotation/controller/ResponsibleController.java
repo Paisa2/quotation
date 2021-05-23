@@ -28,7 +28,7 @@ public class ResponsibleController {
     }
 
     @ApiOperation(value = "update permissions of the role")
-    @PutMapping("/role/update_permissions/{idRole}")
+    @PutMapping("/role/{idRole}")
     public void updatePermissionOfTheRole(@PathVariable("idRole") Long id,
                                           @RequestBody List<Permission> permissions) {
         responsibleService.updatePermissionOfTheRole(id, permissions);

@@ -2,7 +2,7 @@ package com.genesiscode.quotation.domain;
 import lombok.*;
 import javax.persistence.*;
 
-@NoArgsConstructor @Getter @Setter @ToString
+@NoArgsConstructor @Data
 @Entity
 public class Responsible /*implements UserDetails */{
 
@@ -38,6 +38,7 @@ public class Responsible /*implements UserDetails */{
         this.role = role;
         this.password = password;
     }
+
 
 /*
 

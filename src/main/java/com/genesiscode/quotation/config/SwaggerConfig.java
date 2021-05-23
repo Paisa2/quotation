@@ -4,10 +4,8 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.Collections;
-import java.util.List;
+import springfox.documentation.swagger2.annotations.*;
+import java.util.*;
 
 import static springfox.documentation.builders.PathSelectors.*;
 
