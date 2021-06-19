@@ -95,9 +95,6 @@ class RoleRepositoryTest {
                 () -> assertThat(listActual).containsExactly(roleViewExpectedOne, roleViewExpectedTwo, roleViewExpectedThree)
             );
         }
-
-
-
     }
 
     @AfterEach

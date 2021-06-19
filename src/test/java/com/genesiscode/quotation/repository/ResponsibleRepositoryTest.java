@@ -54,10 +54,12 @@ class ResponsibleRepositoryTest {
     }
 
     @Nested
+
     @DisplayName("get responsible by email")
     class GetResponsibleByEmailMethodTest {
 
         @Test
+        @Disabled
         @DisplayName("it returns responsible with correct email ")
         void itReturnsResponsibleWithCorrectEmail() {
             //GIVEN
@@ -73,10 +75,47 @@ class ResponsibleRepositoryTest {
                     underTest.getResponsibleByEmail("rafael@gmail.com");
 
             //THEN
-            assertAll(
+            /*assertAll(
                 () -> assertThat(responsibleActual.isPresent()).isTrue(),
                 () -> assertThat(responsibleActual.get()).isEqualTo(expected)
-            );
+            );*/
+            boolean present = responsibleActual.isPresent();
+            assertThat(present).isTrue();
+            Responsible responsible= responsibleActual.get();
+            assertThat(responsible.getEmail()).isEqualTo("rafael@gmail.com");
+
+            assertThat(responsible.getName()).isEqualTo("Rafael");
+
+            assertThat(responsible.getLastName()).isEqualTo("Villca");
+
+            assertThat(responsible.getPassword()).isEqualTo("villca");
+
+        }
+
+
+        @Disabled
+        @Test
+        @DisplayName("it returns responsible  does not exist correct email ")
+        void itReturnResponsibleDoesNotExistCorrectEmail(){
+            //GIVEN
+            /*Responsible expected = new Responsible();
+            expected.setId(2L);
+            expected.setName("Rafael");
+            expected.setLastName("Villca");
+            expected.setEmail("rafael@gmail.com");
+            expected.setPassword("villca");*/
+
+            //WHEN
+            Optional<Responsible> responsibleActual =
+                    underTest.getResponsibleByEmail("rafael-17-17@gmail.com");
+
+            //THEN
+            assertThat(responsibleActual.isPresent()).isTrue();
+            /*boolean present = responsibleActual.equals("rafael@gmail.com");
+            assertThat(present).isFalse();
+            Responsible responsible = responsibleActual.get();
+            assertThat(responsible.getEmail()).isEqualTo("rafael-17@gmail.com");
+            */
         }
     }
 
